@@ -13,7 +13,7 @@ sigma = .0001; % FWHM of pulse - altar to match the data and report the final va
 twave1 = .0005;
 twave2 = .001;
 
-Emax = 0.1; % Arbitrary
+Emax = 10; % Arbitrary
 
 % -- Time Settings --
 steps = 30000; % Total steps
@@ -27,7 +27,7 @@ for i=2:steps % Step through and set time vector
 end
 
 % -- Tau Settings
-tausteps = 3000;
+tausteps = 300;
 tauf = .001;
 htau = tauf./tausteps;
 tauvec = zeros(1, tausteps);
@@ -38,22 +38,22 @@ for i=2:tausteps % Step through and set tau vector
     tauvec(i) = tauvec(i-1)+htau;
 end
 
-for i=2:tausteps
-    Wave1 = E1(Emax,freq,tv,twave1,sigma);
-    Wave2 = E2(Emax,freq,tv,tauvec(i),twave2,sigma);
-    E = Wave1 + Wave2;
-    I = Intensity(E);
-    Itot(i) = trapz(tv,(I.^2));
-    
-    %scatter(phase(1,2:end), I(1,2:end))
-    %scatter(tv(1,2:end), I(1,2:end))
-    %scatter(tv(1,2:end), E(1,2:end))
+i = 100;
 
-    % function x = timetopos(t) % Simulates the piezo micrometer, varies 1 micron per 1/2 second
-    % x = 0.0000000000001*t;
-    % end
-end
-scatter(tauvec,Itot,1);
+Wave1 = E1(Emax,freq,tv,twave1,sigma);
+Wave2 = E2(Emax,freq,tv,tauvec(i),twave2,sigma);
+E = Wave1 + Wave2;
+I = Intensity(E);
+scatter(tv(1,2:end), E(1,2:end),1)
+%scatter(phase(1,2:end), I(1,2:end))
+%scatter(tv(1,2:end), I(1,2:end))
+%scatter(tv(1,2:end), E(1,2:end))
+
+% function x = timetopos(t) % Simulates the piezo micrometer, varies 1 micron per 1/2 second
+% x = 0.0000000000001*t;
+% end
+
+%scatter(tauvec,Itot);
 
 function I = Intensity(E)
 I = 4*(E).^2;
